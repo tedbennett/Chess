@@ -55,16 +55,16 @@ class Pawn(Piece):
             self.surface = self.load_piece("w_pawn")
 
     def valid_move(self, new_x, new_y, board = False):
-        if(new_y - self.y == 1*self.colour and new_x - self.x == 0) and board.is_occupied(new_x,new_y) == False:
+        if(new_y - self.y == 1*self.colour and new_x - self.x == 0) and board.isOccupied(new_x,new_y) == False:
             # check_collision()
             return True
-        elif(new_y - self.y == 2*self.colour and new_x - self.x == 0) and (self.y == 1 or self.y == 6) and board.is_occupied(new_x,new_y) == False:
+        elif(new_y - self.y == 2*self.colour and new_x - self.x == 0) and (self.y == 1 or self.y == 6) and board.isOccupied(new_x,new_y) == False:
             # check_collision()
             return True
         if(new_y - self.y == 1*self.colour 
             and abs(new_x - self.x) == 1 
-            and board.is_occupied(new_x,new_y) != False
-            and board.is_occupied(new_x,new_y) != self.colour):
+            and board.isOccupied(new_x,new_y) != False
+            and board.isOccupied(new_x,new_y) != self.colour):
             # check_collision()
             return True
         # print('fail')
@@ -160,8 +160,11 @@ class King(Piece):
             self.surface = self.load_piece("w_king")
 
     def valid_move(self, new_x, new_y, board = False):
-        if(abs(new_y - self.y) == 1 and abs(new_x - self.x) == 0) or (abs(new_y - self.y) == 0 and abs(new_x - self.x) == 1):
+        if(abs(new_y - self.y) == 1 and abs(new_x - self.x) == 0) or (abs(new_y - self.y) == 0 and abs(new_x - self.x) == 1) or (abs(new_y - self.y) == 1 and abs(new_x - self.x) == 1):
             return True
+        elif (abs(new_y - self.y) == 0 and abs(new_x - self.x) == 2):
+            if self.colour == 'white' and self.y == 7 or self.colour == 'black' and self.y == 0:
+                return True
 
     def type(self):
         return('king')

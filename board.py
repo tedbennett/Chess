@@ -29,7 +29,7 @@ class Board:
         self.pieces += [piece.Queen(4, 7, 'white')]
         self.pieces += [piece.King(3, 7, 'white')]
 
-    def draw_board(self, screen):
+    def drawBoard(self, screen):
         screen.fill(LIGHTBROWN)
         for i in range(0,8,1):
             for j in range(0,8,2): 
@@ -40,7 +40,7 @@ class Board:
         for piece in self.pieces:
             screen.blit(piece.surface,(piece.draw_x,piece.draw_y)) 
 
-    def is_occupied(self, x, y):
+    def isOccupied(self, x, y):
         for piece in self.pieces:
             if piece.x == x and piece.y == y:
                 return piece
@@ -49,7 +49,7 @@ class Board:
     def delete(self, piece):
         self.pieces.remove(piece)
 
-    def check_collision(self,new_x, new_y, original_piece):
+    def checkCollision(self,new_x, new_y, original_piece):
         if original_piece.type() == 'knight': return True
         old_x = original_piece.x
         old_y = original_piece.y
