@@ -35,16 +35,15 @@ while running:
                         if piece.colour != turn:
                             piece_dragging = False
 
-
         elif event.type == pygame.MOUSEBUTTONUP:
-            if event.button == 1 and piece_dragging == True:
+            if event.button == 1 and piece_dragging:
                 new_x = int(event.pos[0]/(SCREEN_WIDTH/8))
                 new_y = int(event.pos[1]/(SCREEN_HEIGHT/8))
                 
                 if selected_piece.valid_move(new_x, new_y, board):
-                    if board.checkCollision(new_x, new_y, selected_piece):
-                        dest_piece = board.isOccupied(new_x, new_y)
-                        if dest_piece != False:
+                    if board.check_collision(new_x, new_y, selected_piece):
+                        dest_piece = board.is_occupied(new_x, new_y)
+                        if dest_piece:
                             if dest_piece.colour != selected_piece.colour:
                                 board.delete(dest_piece)
                                 selected_piece.move(event.pos[0], event.pos[1]) 
@@ -67,11 +66,9 @@ while running:
                 mouse_x, mouse_y = event.pos
                 selected_piece.dragged(mouse_x + offset_x, mouse_y + offset_y)
 
-    board.drawBoard(screen)
+    board.draw_board(screen)
     pygame.display.flip()
 
     clock.tick(FPS)
-
-
 
 pygame.quit()
