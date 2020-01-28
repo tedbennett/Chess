@@ -59,3 +59,18 @@ class Board:
                 piece.selected = True
                 return piece
 
+    def check_move(self, moved_piece, mouse_x, mouse_y):
+        x = int(mouse_x / (SCREEN_WIDTH / 8))
+        y = int(mouse_y / (SCREEN_HEIGHT / 8))
+        for piece in self.pieces:
+            if piece is not moved_piece:
+                if piece.pos() == (x, y):
+                    moved_piece.selected = False
+                    if piece.colour != moved_piece.colour:
+                        del piece
+                        moved_piece.commit(mouse_x, mouse_y)
+                    else:
+                        moved_piece.reset_draw()
+                    return True
+        moved_piece.commit(mouse_x, mouse_y)
+        return True

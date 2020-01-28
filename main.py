@@ -29,16 +29,15 @@ while running:
                     offset_y = selected.draw_y - mouse_y
 
         elif event.type == pygame.MOUSEMOTION:
+            mouse_x, mouse_y = event.pos
             if selected:
-                mouse_x, mouse_y = event.pos
                 selected.move(mouse_x + offset_x, mouse_y + offset_y)
 
         elif event.type == pygame.MOUSEBUTTONUP:
+            mouse_x, mouse_y = event.pos
             if event.button == 1 and selected:
-                mouse_x, mouse_y = event.pos
-                selected.commit(mouse_x, mouse_y)
-                selected.selected = False
-                selected = None
+                if board.check_move(selected, mouse_x, mouse_y):
+                    selected = None
 
     board.draw_board(screen)
     pygame.display.flip()

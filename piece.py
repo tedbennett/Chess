@@ -32,6 +32,9 @@ class Piece:
     def commit(self, x, y):
         self.x = int(x / (SCREEN_WIDTH / 8))
         self.y = int(y / (SCREEN_HEIGHT / 8))
+        self.reset_draw()
+
+    def reset_draw(self):
         self.draw_x = self.x * SCREEN_WIDTH / 8
         self.draw_y = self.y * SCREEN_HEIGHT / 8
 
