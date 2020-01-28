@@ -1,0 +1,12 @@
+###Rewrite piece
+
+#### Dict with coordinate tuple key
+
+- Don't need to store the location in the piece
+- Easy lookup to see which piece is selected
+- Problems drawing object
+
+### Object has float coordinates
+
+- Can draw the position returned by get_position()
+- 
