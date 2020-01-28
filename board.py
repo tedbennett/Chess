@@ -1,6 +1,6 @@
 from piece import Pawn, Rook, Bishop, Knight, King, Queen
 import pygame
-from constant import SCREEN_WIDTH, SCREEN_HEIGHT, LIGHTBROWN, LIGHTBROWN, DARKBROWN
+from constant import SCREEN_WIDTH, SCREEN_HEIGHT, LIGHTBROWN, DARKBROWN
 
 
 class Board:
@@ -50,3 +50,12 @@ class Board:
                 selected = piece
         if selected:
             selected.draw(surface)
+
+    def mouse_clicked(self, mouse_x, mouse_y):
+        x = int(mouse_x / (SCREEN_WIDTH / 8))
+        y = int(mouse_y / (SCREEN_HEIGHT / 8))
+        for piece in self.pieces:
+            if (x, y) == piece.pos():
+                piece.selected = True
+                return piece
+

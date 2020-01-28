@@ -25,9 +25,18 @@ class Piece:
     def valid_move(self, new_x, new_y, piece):
         return False
 
-    def move(self, new_x, new_y):
-        self.x = int(new_x / (SCREEN_WIDTH / 8))
-        self.y = int(new_y / (SCREEN_HEIGHT / 8))
+    def move(self, x, y):
+        self.draw_x = x
+        self.draw_y = y
+
+    def commit(self, x, y):
+        self.x = int(x / (SCREEN_WIDTH / 8))
+        self.y = int(y / (SCREEN_HEIGHT / 8))
+        self.draw_x = self.x * SCREEN_WIDTH / 8
+        self.draw_y = self.y * SCREEN_HEIGHT / 8
+
+    def pos(self):
+        return self.x, self.y
 
 
 class Pawn(Piece):
