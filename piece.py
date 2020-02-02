@@ -21,7 +21,7 @@ class Piece:
     def draw(self, surface):
         surface.blit(self.image, (self.draw_x, self.draw_y))
 
-    def valid_move(self, new_x, new_y, piece):
+    def valid_move(self, new_x, new_y):
         return False
 
     def move(self, x, y):
@@ -47,9 +47,12 @@ class Pawn(Piece):
         self.type = "Pawn"
         self.load_image()
 
-    def valid_move(self, new_x, new_y, board=False):
+    def valid_move(self, new_x, new_y):
         if ((new_y - self.y == 1 and self.colour == "black") or
                 (new_y - self.y == -1 and self.colour == "white")) and new_x - self.x == 0:
+            return True
+        elif ((new_y - self.y == 2 and self.y == 1 and self.colour == "black") or
+              (new_y - self.y == -2 and self.y == 6 and self.colour == "white")) and new_x - self.x == 0:
             return True
         return False
 
@@ -60,7 +63,7 @@ class Rook(Piece):
         self.type = "Rook"
         self.load_image()
 
-    def valid_move(self, new_x, new_y, board=False):
+    def valid_move(self, new_x, new_y):
         if (new_y - self.y != 0 and new_x - self.x == 0) or (new_y - self.y == 0 and new_x - self.x != 0):
             return True
         else:
@@ -73,7 +76,7 @@ class Knight(Piece):
         self.type = "Knight"
         self.load_image()
 
-    def valid_move(self, new_x, new_y, board=False):
+    def valid_move(self, new_x, new_y):
         if (abs(new_y - self.y) == 1 and abs(new_x - self.x) == 2) or (
                 abs(new_y - self.y) == 2 and abs(new_x - self.x) == 1):
             return True
