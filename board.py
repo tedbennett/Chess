@@ -68,7 +68,7 @@ class Board:
                     if piece.pos() == (x, y):
                         if piece.colour != moved_piece.colour:
                             self.pieces.remove(piece)
-                        else:
+                        elif type(moved_piece) != Knight:
                             invalid_move = True
                             break
                     else:
