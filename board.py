@@ -46,7 +46,7 @@ class Board:
         for idx, piece in enumerate(self.pieces):
             if idx != self.selected_idx:
                 piece.draw(surface)
-        if self.selected_idx:
+        if self.selected_idx is not None:
             self.pieces[self.selected_idx].draw(surface)
 
     def mouse_clicked(self, mouse_x, mouse_y):
@@ -60,17 +60,17 @@ class Board:
         x = int(mouse_x / (SCREEN_WIDTH / 8))
         y = int(mouse_y / (SCREEN_HEIGHT / 8))
         invalid_move = False
+        piece_to_remove = None
         moved_piece = self.pieces[self.selected_idx]
         if moved_piece.valid_move(x, y):
             path = self.get_move_path((x, y))
             for idx, piece in enumerate(self.pieces):
-                if idx != self.selected_idx and piece.pos() in path:
-                    if piece.pos() == (x, y):
-                        if piece.colour != moved_piece.colour:
-                            self.pieces.remove(piece)
-                        elif type(moved_piece) != Knight:
-                            invalid_move = True
-                            break
+                if idx != self.selected_idx and piece.pos() in path[:-1] and type(moved_piece) != Knight:
+                    invalid_move = True
+                    break
+                elif piece.pos() == (x, y):
+                    if piece.colour != moved_piece.colour:
+                        piece_to_remove = piece
                     else:
                         invalid_move = True
                         break
@@ -82,6 +82,8 @@ class Board:
             self.selected_idx = None
             moved_piece.reset_draw()
             return
+        if piece_to_remove is not None:
+            self.pieces.remove(piece_to_remove)
         moved_piece.commit(mouse_x, mouse_y)
         self.selected_idx = None
 
@@ -106,13 +108,13 @@ class Board:
             x_step = int(delta_x / abs(delta_x))
             if delta_y != 0:
                 y_step = int(delta_y / abs(delta_y))
-                for i in range(abs(end[0] - start[0])):  # absolute change in x == absolute change in y
+                for i in range(abs(end[0] - start[0]) + 1):  # absolute change in x == absolute change in y
                     path.append((start[0] + (i * x_step), start[1] + (i * y_step)))
             else:
-                for i in range(abs(end[0] - start[0])):
+                for i in range(abs(end[0] - start[0]) + 1):
                     path.append((start[0] + (i * x_step), start[1]))
         elif delta_y != 0:
             y_step = int(delta_y / abs(delta_y))
-            for i in range(abs(end[1] - start[1])):
+            for i in range(abs(end[1] - start[1]) + 1):
                 path.append((start[0], start[1] + (i * y_step)))
         return path

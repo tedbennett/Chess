@@ -49,7 +49,7 @@ class Pawn(Piece):
 
     def valid_move(self, new_x, new_y):
         if ((new_y - self.y == 1 and self.colour == "black") or
-                (new_y - self.y == -1 and self.colour == "white")) and new_x - self.x == 0:
+            (new_y - self.y == -1 and self.colour == "white")) and new_x - self.x == 0:
             return True
         elif ((new_y - self.y == 2 and self.y == 1 and self.colour == "black") or
               (new_y - self.y == -2 and self.y == 6 and self.colour == "white")) and new_x - self.x == 0:
@@ -64,10 +64,7 @@ class Rook(Piece):
         self.load_image()
 
     def valid_move(self, new_x, new_y):
-        if (new_y - self.y != 0 and new_x - self.x == 0) or (new_y - self.y == 0 and new_x - self.x != 0):
-            return True
-        else:
-            return False
+        return (new_y - self.y != 0 and new_x - self.x == 0) or (new_y - self.y == 0 and new_x - self.x != 0)
 
 
 class Knight(Piece):
@@ -77,11 +74,8 @@ class Knight(Piece):
         self.load_image()
 
     def valid_move(self, new_x, new_y):
-        if (abs(new_y - self.y) == 1 and abs(new_x - self.x) == 2) or (
-                abs(new_y - self.y) == 2 and abs(new_x - self.x) == 1):
-            return True
-        else:
-            return False
+        return (abs(new_y - self.y) == 1 and abs(new_x - self.x) == 2) or (
+                abs(new_y - self.y) == 2 and abs(new_x - self.x) == 1)
 
 
 class Bishop(Piece):
@@ -92,10 +86,7 @@ class Bishop(Piece):
         self.load_image()
 
     def valid_move(self, new_x, new_y, board=False):
-        if (abs(new_y - self.y) == abs(new_x - self.x) and abs(new_x - self.x) > 0):
-            return True
-        else:
-            return False
+        return abs(new_y - self.y) == abs(new_x - self.x) and abs(new_x - self.x) > 0
 
 
 class Queen(Piece):
@@ -106,12 +97,8 @@ class Queen(Piece):
         self.load_image()
 
     def valid_move(self, new_x, new_y, board=False):
-        if (abs(new_y - self.y) == abs(new_x - self.x) and abs(new_x - self.x) > 0):
-            return True
-        elif (new_y - self.y != 0 and new_x - self.x == 0) or (new_y - self.y == 0 and new_x - self.x != 0):
-            return True
-        else:
-            return False
+        return (abs(new_y - self.y) == abs(new_x - self.x) and abs(new_x - self.x) > 0) or (
+                    (new_y - self.y != 0 and new_x - self.x == 0) or (new_y - self.y == 0 and new_x - self.x != 0))
 
 
 class King(Piece):
@@ -122,10 +109,6 @@ class King(Piece):
         self.load_image()
 
     def valid_move(self, new_x, new_y, board=False):
-        if (abs(new_y - self.y) == 1 and abs(new_x - self.x) == 0) or (
+        return ((abs(new_y - self.y) == 1 and abs(new_x - self.x) == 0) or (
                 abs(new_y - self.y) == 0 and abs(new_x - self.x) == 1) or (
-                abs(new_y - self.y) == 1 and abs(new_x - self.x) == 1):
-            return True
-        elif (abs(new_y - self.y) == 0 and abs(new_x - self.x) == 2):
-            if self.colour == 'white' and self.y == 7 or self.colour == 'black' and self.y == 0:
-                return True
+                abs(new_y - self.y) == 1 and abs(new_x - self.x) == 1))
