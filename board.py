@@ -6,6 +6,7 @@ from constant import SCREEN_WIDTH, SCREEN_HEIGHT, LIGHTBROWN, DARKBROWN
 class Board:
     def __init__(self):
         self.pieces = []
+        self.selected_idx = None
         for i in range(8):
             self.pieces += [Pawn(i, 1, 'black')]
             self.pieces += [Pawn(i, 6, 'white')]
@@ -42,35 +43,43 @@ class Board:
         self.draw_pieces(screen)
 
     def draw_pieces(self, surface):
-        selected = None
-        for piece in self.pieces:
-            if not piece.selected:
+        for idx, piece in enumerate(self.pieces):
+            if idx != self.selected_idx:
                 piece.draw(surface)
-            else:
-                selected = piece
-        if selected:
-            selected.draw(surface)
+        if self.selected_idx:
+            self.pieces[self.selected_idx].draw(surface)
 
     def mouse_clicked(self, mouse_x, mouse_y):
         x = int(mouse_x / (SCREEN_WIDTH / 8))
         y = int(mouse_y / (SCREEN_HEIGHT / 8))
-        for piece in self.pieces:
+        for idx, piece in enumerate(self.pieces):
             if (x, y) == piece.pos():
-                piece.selected = True
-                return piece
+                self.selected_idx = idx
 
-    def check_move(self, moved_piece, mouse_x, mouse_y):
+    def check_move(self, mouse_x, mouse_y):
         x = int(mouse_x / (SCREEN_WIDTH / 8))
         y = int(mouse_y / (SCREEN_HEIGHT / 8))
+        moved_piece = self.pieces[self.selected_idx]
         for piece in self.pieces:
-            if piece is not moved_piece:
-                if piece.pos() == (x, y):
-                    moved_piece.selected = False
-                    if piece.colour != moved_piece.colour:
-                        del piece
-                        moved_piece.commit(mouse_x, mouse_y)
-                    else:
-                        moved_piece.reset_draw()
-                    return True
+            if piece is not moved_piece and piece.pos() == (x, y):
+                if piece.colour != moved_piece.colour:
+                    del piece
+                    moved_piece.commit(mouse_x, mouse_y)
+                else:
+                    moved_piece.reset_draw()
+                return True
         moved_piece.commit(mouse_x, mouse_y)
+        self.selected_idx = None
         return True
+
+    def piece_selected(self):
+        return self.selected_idx is not None
+
+    def selected_draw_pos(self):
+        selected_piece = self.pieces[self.selected_idx]
+        return selected_piece.draw_x, selected_piece.draw_y
+
+    def move(self, x, y):
+        if self.selected_idx is None:
+            raise Exception
+        self.pieces[self.selected_idx].move(x, y)

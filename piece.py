@@ -11,7 +11,6 @@ class Piece:
         self.draw_y = y * SCREEN_HEIGHT / 8
 
         self.colour = colour
-        self.selected = False
         self.type = None
         self.image = None
 
