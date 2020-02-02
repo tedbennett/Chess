@@ -48,22 +48,10 @@ class Pawn(Piece):
         self.load_image()
 
     def valid_move(self, new_x, new_y, board=False):
-        if (new_y - self.y == 1 * self.colour and new_x - self.x == 0) and board.is_occupied(new_x, new_y) == False:
-            # check_collision()
+        if ((new_y - self.y == 1 and self.colour == "black") or
+                (new_y - self.y == -1 and self.colour == "white")) and new_x - self.x == 0:
             return True
-        elif (new_y - self.y == 2 * self.colour and new_x - self.x == 0) and (
-                self.y == 1 or self.y == 6) and board.is_occupied(new_x, new_y) == False:
-            # check_collision()
-            return True
-        if (new_y - self.y == 1 * self.colour
-                and abs(new_x - self.x) == 1
-                and board.is_occupied(new_x, new_y) != False
-                and board.is_occupied(new_x, new_y) != self.colour):
-            # check_collision()
-            return True
-        # print('fail')
-        else:
-            return False
+        return False
 
 
 class Rook(Piece):
@@ -74,7 +62,6 @@ class Rook(Piece):
 
     def valid_move(self, new_x, new_y, board=False):
         if (new_y - self.y != 0 and new_x - self.x == 0) or (new_y - self.y == 0 and new_x - self.x != 0):
-            # check_collision()
             return True
         else:
             return False
@@ -103,7 +90,6 @@ class Bishop(Piece):
 
     def valid_move(self, new_x, new_y, board=False):
         if (abs(new_y - self.y) == abs(new_x - self.x) and abs(new_x - self.x) > 0):
-            # check_collision()
             return True
         else:
             return False
@@ -118,7 +104,6 @@ class Queen(Piece):
 
     def valid_move(self, new_x, new_y, board=False):
         if (abs(new_y - self.y) == abs(new_x - self.x) and abs(new_x - self.x) > 0):
-            # check_collision()
             return True
         elif (new_y - self.y != 0 and new_x - self.x == 0) or (new_y - self.y == 0 and new_x - self.x != 0):
             return True

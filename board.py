@@ -60,6 +60,10 @@ class Board:
         x = int(mouse_x / (SCREEN_WIDTH / 8))
         y = int(mouse_y / (SCREEN_HEIGHT / 8))
         moved_piece = self.pieces[self.selected_idx]
+        if not moved_piece.valid_move(x, y):
+            moved_piece.reset_draw()
+            self.selected_idx = None
+            return True
         for idx, piece in enumerate(self.pieces):
             if idx != self.selected_idx and piece.pos() == (x, y):
                 if piece.colour != moved_piece.colour:
