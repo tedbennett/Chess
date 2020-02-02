@@ -60,10 +60,10 @@ class Board:
         x = int(mouse_x / (SCREEN_WIDTH / 8))
         y = int(mouse_y / (SCREEN_HEIGHT / 8))
         moved_piece = self.pieces[self.selected_idx]
-        for piece in self.pieces:
-            if piece is not moved_piece and piece.pos() == (x, y):
+        for idx, piece in enumerate(self.pieces):
+            if idx != self.selected_idx and piece.pos() == (x, y):
                 if piece.colour != moved_piece.colour:
-                    del piece
+                    self.pieces.remove(piece)
                     moved_piece.commit(mouse_x, mouse_y)
                 else:
                     moved_piece.reset_draw()
