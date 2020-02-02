@@ -67,6 +67,7 @@ class Board:
                     moved_piece.commit(mouse_x, mouse_y)
                 else:
                     moved_piece.reset_draw()
+                self.selected_idx = None
                 return True
         moved_piece.commit(mouse_x, mouse_y)
         self.selected_idx = None
