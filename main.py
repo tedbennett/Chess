@@ -1,6 +1,8 @@
 import pygame
 from board import Board
+from client import Client
 from constant import SCREEN_WIDTH, SCREEN_HEIGHT
+import json
 
 FPS = 30
 
@@ -12,6 +14,7 @@ pygame.display.set_caption("Chess")
 
 clock = pygame.time.Clock()
 board = Board()
+client = Client(board)
 turn = -1
 running = True
 offset_x = offset_y = 0
@@ -36,7 +39,14 @@ while running:
         elif event.type == pygame.MOUSEBUTTONUP:
             mouse_x, mouse_y = event.pos
             if event.button == 1 and board.piece_selected():
-                board.check_move(mouse_x, mouse_y)
+                move = board.check_move(mouse_x, mouse_y)
+                if move is not None:
+                    request = {"key": "MOVE",
+                               "payload": {"type": move[0].__name__,
+                                           "idx": move[1],
+                                           "start": move[2],
+                                           "end": move[3]}}
+                    client.send(request)
 
     board.draw_board(screen)
     pygame.display.flip()
@@ -44,4 +54,3 @@ while running:
     clock.tick(FPS)
 
 pygame.quit()
-

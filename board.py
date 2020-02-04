@@ -7,6 +7,7 @@ class Board:
     def __init__(self):
         self.pieces = []
         self.selected_idx = None
+        self._player_name = None
         for i in range(8):
             self.pieces += [Pawn(i, 1, 'black')]
             self.pieces += [Pawn(i, 6, 'white')]
@@ -57,11 +58,12 @@ class Board:
                 self.selected_idx = idx
 
     def check_move(self, mouse_x, mouse_y):
+        moved_piece = self.pieces[self.selected_idx]
+        start_pos = moved_piece.pos()
         x = int(mouse_x / (SCREEN_WIDTH / 8))
         y = int(mouse_y / (SCREEN_HEIGHT / 8))
         invalid_move = False
         piece_to_remove = None
-        moved_piece = self.pieces[self.selected_idx]
         if moved_piece.valid_move(x, y):
             path = self.get_move_path((x, y))
             for idx, piece in enumerate(self.pieces):
@@ -81,11 +83,12 @@ class Board:
         if invalid_move:
             self.selected_idx = None
             moved_piece.reset_draw()
-            return
+            return None
         if piece_to_remove is not None:
             self.pieces.remove(piece_to_remove)
-        moved_piece.commit(mouse_x, mouse_y)
-        self.selected_idx = None
+        idx = self.selected_idx
+        self.commit(mouse_x, mouse_y)
+        return type(moved_piece), idx, start_pos, (mouse_x, mouse_y)
 
     def piece_selected(self):
         return self.selected_idx is not None
@@ -98,6 +101,12 @@ class Board:
         if self.selected_idx is None:
             raise Exception
         self.pieces[self.selected_idx].move(x, y)
+
+    def commit(self, x, y):
+        if self.selected_idx is None:
+            raise Exception
+        self.pieces[self.selected_idx].commit(x, y)
+        self.selected_idx = None
 
     def get_move_path(self, end):
         start = self.pieces[self.selected_idx].pos()
@@ -118,3 +127,32 @@ class Board:
             for i in range(abs(end[1] - start[1]) + 1):
                 path.append((start[0], start[1] + (i * y_step)))
         return path
+
+    def process_message(self, message):
+        # Receives a message from the client and passes it to the relevant helper function
+        name = message["name"]
+        key = message["key"]
+        payload = message["payload"]
+        if key == "JOIN":
+            self._process_join(name)
+        elif key == "EXIT":
+            self._process_exit(name)
+        if payload and name != self._player_name and key == "MOVE":
+            return self._process_move(payload)
+        return None
+
+    def _process_move(self, payload):
+        self.selected_idx = payload["idx"]
+        x, y = payload["end"]
+        self.commit(x, y)
+
+    def _process_join(self, name):
+        if not self._player_name:
+            self._player_name = name
+            print("Joined the game as Player {}".format(name))
+        elif name:
+            print("Player {} has joined the game".format(name))
+
+    def _process_exit(self, name):
+        print("Player {} has left the game".format(name))
+        pass
